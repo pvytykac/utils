@@ -1,0 +1,70 @@
+allprojects  {
+  apply plugin: 'maven'
+
+  group = 'org.pvytykac'
+  version = '1.0'
+
+  project.buildDir = 'target/'
+
+}
+
+subprojects {
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
+
+  repositories {
+    mavenLocal()
+    maven { url "http://repo.maven.apache.org/maven2" }
+  }
+
+  // global version properties
+  ext {
+    junitVersion = '4.12'
+    mockitoVersion = '1.9.5'
+    powerMockVersion = '1.6.4'
+    hsqlVersion = '2.2.9'
+    slf4jVersion = '1.7.18'
+    logbackVersion = '1.1.6'
+    groovyVersion = "2.4.6"
+  }
+
+  dependencies {
+    compile "org.slf4j:slf4j-api:$slf4jVersion"
+    compile "ch.qos.logback:logback-classic:$logbackVersion"
+
+    testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.mockito:mockito-all:$mockitoVersion"
+    testCompile "org.powermock:powermock-core:$powerMockVersion"
+    testCompile "org.powermock:powermock-api-mockito:$powerMockVersion"
+    testCompile "org.hsqldb:hsqldb:$hsqlVersion"
+  }
+
+  // jacoco test coverage configuration
+  jacoco {
+    toolVersion = "0.7.1.201405082137"
+    reportsDir = file("$buildDir/reports/test-coverage")
+  }
+
+  // run jacoco after test configuration
+  test {
+    finalizedBy jacocoTestReport
+  }
+
+  // run tests before maven install
+  install {
+      dependsOn test
+  }
+
+  gradle.projectsEvaluated {
+
+    // java compiler options
+    tasks.withType(JavaCompile) {
+      options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    }
+
+  }
+}

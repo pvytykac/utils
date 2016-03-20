@@ -1,0 +1,4 @@
+rootProject.name = 'pvytykac-utils'
+include ':jpa'
+
+project(':jpa').projectDir = "$rootDir/jpa" as File

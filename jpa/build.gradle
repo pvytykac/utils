@@ -1,0 +1,11 @@
+description = ''
+
+ext {
+    jpaVersion = '1.0.0.Final'
+    hibernateVersion = '5.1.0.Final'
+}
+
+dependencies {
+    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$jpaVersion"
+    compile "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+}
