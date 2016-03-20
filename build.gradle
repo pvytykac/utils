@@ -1,24 +1,29 @@
 allprojects  {
+  apply plugin: 'java'
+  apply plugin: 'jacoco'
   apply plugin: 'maven'
+
+  repositories {
+    mavenLocal()
+    mavenCentral()
+  }
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 
   group = 'org.pvytykac'
   version = '1.0'
 
   project.buildDir = 'target/'
 
+  // jacoco test coverage configuration
+  jacoco {
+    toolVersion = "0.7.1.201405082137"
+    reportsDir = file("$buildDir/reports/test-coverage")
+  }
 }
 
 subprojects {
-  apply plugin: 'java'
-  apply plugin: 'jacoco'
-
-  sourceCompatibility = 1.8
-  targetCompatibility = 1.8
-
-  repositories {
-    mavenLocal()
-    maven { url "http://repo.maven.apache.org/maven2" }
-  }
 
   // global version properties
   ext {
@@ -32,32 +37,22 @@ subprojects {
   }
 
   dependencies {
-    compile "org.slf4j:slf4j-api:$slf4jVersion"
-    compile "ch.qos.logback:logback-classic:$logbackVersion"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: project.slf4jVersion
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: project.logbackVersion
 
-    testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
-    testCompile "junit:junit:$junitVersion"
-    testCompile "org.mockito:mockito-all:$mockitoVersion"
-    testCompile "org.powermock:powermock-core:$powerMockVersion"
-    testCompile "org.powermock:powermock-api-mockito:$powerMockVersion"
-    testCompile "org.hsqldb:hsqldb:$hsqlVersion"
-  }
-
-  // jacoco test coverage configuration
-  jacoco {
-    toolVersion = "0.7.1.201405082137"
-    reportsDir = file("$buildDir/reports/test-coverage")
+    testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: project.groovyVersion
+    testCompile group: 'junit', name: 'junit', version: project.junitVersion
+    testCompile group: 'org.mockito', name: 'mockito-all', version: project.mockitoVersion
+    testCompile group: 'org.powermock', name: 'powermock-core', version: project.powerMockVersion
+    testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: project.powerMockVersion
+    testCompile group: 'org.hsqldb', name: 'hsqldb', version: project.hsqlVersion
   }
 
   // run jacoco after test configuration
-  test {
-    finalizedBy jacocoTestReport
-  }
+  tasks.getByPath(':test').finalizedBy jacocoTestReport
 
   // run tests before maven install
-  install {
-      dependsOn test
-  }
+  tasks.getByPath(':install').dependsOn test
 
   gradle.projectsEvaluated {
 
@@ -67,4 +62,26 @@ subprojects {
     }
 
   }
+}
+
+// merge test coverage report of sub-modules
+tasks.getByPath(':test').finalizedBy 'jacocoMerge'
+task jacocoMerge(type: JacocoReport) {
+  dependsOn = subprojects.test
+
+  additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
+  sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
+  classDirectories =  files(subprojects.sourceSets.main.output)
+  executionData = files(subprojects.jacocoTestReport.executionData)
+}
+
+// merge javadoc of sub-modules
+tasks.getByPath(':javadoc').finalizedBy 'javadocMerge'
+task javadocMerge(type: Javadoc) {
+  dependsOn = subprojects.javadoc
+
+  source subprojects.collect { project -> project.sourceSets.main.allJava }
+  classpath = files(subprojects.collect {
+    project -> project.sourceSets.main.allJava
+  })
 }

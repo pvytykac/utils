@@ -1,4 +1,4 @@
-description = ''
+description = 'JPA utils'
 
 ext {
     jpaVersion = '1.0.0.Final'
@@ -6,6 +6,6 @@ ext {
 }
 
 dependencies {
-    compile "org.hibernate.javax.persistence:hibernate-jpa-2.1-api:$jpaVersion"
-    compile "org.hibernate:hibernate-entitymanager:$hibernateVersion"
+    compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: project.jpaVersion
+    compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: project.hibernateVersion
 }

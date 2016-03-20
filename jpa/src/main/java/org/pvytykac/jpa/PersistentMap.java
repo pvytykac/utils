@@ -46,7 +46,7 @@ public interface PersistentMap<ID, ENTITY extends Persistent<ID>> extends Iterab
     boolean containsEntity(ENTITY entity);
 
     /**
-     * @see PersistentMap#addIfAbsent(ENTITY) - if you dont want to overwrite existing entity with the same key
+     * @see #addIfAbsent(Persistent) - if you dont want to overwrite existing entity with the same key
      * @param id to check for
      * @return true if
      */

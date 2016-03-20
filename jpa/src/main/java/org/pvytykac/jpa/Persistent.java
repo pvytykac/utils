@@ -6,7 +6,7 @@ package org.pvytykac.jpa;
  */
 public interface Persistent<ID> {
 
-    public ID getId();
-    public void setId(ID id);
+    ID getId();
+    void setId(ID id);
 
 }

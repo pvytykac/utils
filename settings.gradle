@@ -1,4 +1,5 @@
 rootProject.name = 'pvytykac-utils'
-include ':jpa'
+include ':jpa', ':strings'
 
 project(':jpa').projectDir = "$rootDir/jpa" as File
+project(':strings').projectDir = "$rootDir/strings" as File
