@@ -1,11 +1,14 @@
 description = 'JPA utils'
 
+version = '1.1'
+
 ext {
     jpaVersion = '1.0.0.Final'
     hibernateVersion = '5.1.0.Final'
 }
 
 dependencies {
+    compile project(':core')
     compile group: 'org.hibernate.javax.persistence', name: 'hibernate-jpa-2.1-api', version: project.jpaVersion
     compile group: 'org.hibernate', name: 'hibernate-entitymanager', version: project.hibernateVersion
 }

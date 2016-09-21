@@ -1,0 +1,7 @@
+description = 'Object transformations'
+
+version = '1.0'
+
+dependencies {
+    compile project(':core')
+}
