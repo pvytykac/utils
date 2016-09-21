@@ -1,0 +1,3 @@
+description = 'Implementation of a pseudo EBNF parser'
+
+version = '0.1'

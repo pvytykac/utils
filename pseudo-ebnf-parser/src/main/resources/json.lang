@@ -1,0 +1,60 @@
+OBJECT  = '{', '}'
+        | '{', MEMBERS, '}'
+        ;
+MEMBERS = PAIR
+        | PAIR, MEMBERS
+        ;
+PAIR    = STRING, ':', VALUE
+        ;
+ARRAY   = '[', ']'
+        | '[', ELEMENTS, ']'
+        ;
+ELEMENTS= VALUE
+        | VALUE, ELEMENTS
+        ;
+VALUE   = STRING
+        | NUMBER
+        | OBJECT
+        | ARRAY
+        | 'true'
+        | 'false'
+        | 'null'
+        ;
+STRING  = '""'
+        | '"', chars, '"'
+        ;
+CHARS   = CHAR
+        | CHAR CHARS
+        ;
+CHAR    = ?R:[^"\]?
+        | '\"'
+        | '\\'
+        | '\/'
+        | '\b'
+        | '\f'
+        | '\n'
+        | '\r'
+        | '\t'
+        | '\u', ?R:[0-9a-fA-F]{4}?
+        ;
+NUMBER  = INT
+        | INT, FRAC
+        | INT, EXP
+        | INT, FRAC, EXP
+        ;
+INT     = ?R:[0-9]?
+        | ?R:[1-9]?, DIGITS
+        | '-', ?R:[0-9]?
+        | '-', ?R:[1-9]?, DIGITS
+        ;
+FRAC    = '.', DIGITS
+        ;
+EXP     = E, DIGITS
+        ;
+DIGITS  = ?R:[0-9]?
+        | ?R:[0-9]?, DIGITS
+        ;
+E       = ?R:[eE]?
+        | ?R:[eE]?, '+'
+        | ?R:[eE]?, '-'
+        ;

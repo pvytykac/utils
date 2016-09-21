@@ -3,8 +3,10 @@ include ':jpa'
 include ':strings'
 include ':trf'
 include ':core'
+include ':ebnf'
 
 project(':jpa').projectDir = "$rootDir/jpa" as File
 project(':strings').projectDir = "$rootDir/strings" as File
 project(':trf').projectDir = "$rootDir/trf" as File
 project(':core').projectDir = "$rootDir/core" as File
+project(':ebnf').projectDir = "$rootDir/pseudo-ebnf-parser" as File
