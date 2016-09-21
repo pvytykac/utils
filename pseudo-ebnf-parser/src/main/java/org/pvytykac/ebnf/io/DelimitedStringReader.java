@@ -1,10 +1,10 @@
 package org.pvytykac.ebnf.io;
 
 /**
- * TODO: implement eos handling after stream reader is finished
  * @author paly
  * @since 21/09/2016 22:49
  */
+// TODO: implement eos handling after stream reader is finished
 public final class DelimitedStringReader extends AbstractDelimiterReader {
 
     private final String string;
@@ -18,4 +18,5 @@ public final class DelimitedStringReader extends AbstractDelimiterReader {
     public char next() {
         return string.charAt(position++);
     }
+
 }
