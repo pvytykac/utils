@@ -56,6 +56,38 @@ public class HtmlTagTest {
     }
 
     @Test
+    public void testNullAttributes() throws Exception {
+        HtmlTag tag = new HtmlTag("span")
+            .attr(null)
+            .id(null)
+            .attr("class", null);
+
+        assertEquals("<span/>", tag.full());
+        assertEquals("<span>", tag.open());
+        assertEquals("</span>", tag.close());
+    }
+
+    @Test
+    public void testNullTextBody() throws Exception {
+        HtmlTag tag = new HtmlTag("span")
+            .body((String) null);
+
+        assertEquals("<span/>", tag.full());
+        assertEquals("<span>", tag.open());
+        assertEquals("</span>", tag.close());
+    }
+
+    @Test
+    public void testNullHtmlBody() throws Exception {
+        HtmlTag tag = new HtmlTag("span")
+            .body((HtmlTag) null);
+
+        assertEquals("<span/>", tag.full());
+        assertEquals("<span>", tag.open());
+        assertEquals("</span>", tag.close());
+    }
+
+    @Test
     public void testMultipleBodyParts() throws Exception {
         Tag tag = new HtmlTag("table")
             .body(new HtmlTag("thead"))

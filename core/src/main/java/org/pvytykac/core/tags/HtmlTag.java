@@ -36,7 +36,8 @@ public class HtmlTag implements Tag {
     }
 
     public HtmlTag body(Tag tag) {
-        body.add(tag);
+        if (tag != null)
+            body.add(tag);
 
         return this;
     }
