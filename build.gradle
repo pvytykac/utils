@@ -42,8 +42,8 @@ subprojects {
 
     testCompile group: 'org.codehaus.groovy', name: 'groovy-all', version: project.groovyVersion
     testCompile group: 'junit', name: 'junit', version: project.junitVersion
-    testCompile group: 'org.mockito', name: 'mockito-all', version: project.mockitoVersion
     testCompile group: 'org.powermock', name: 'powermock-core', version: project.powerMockVersion
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: project.powerMockVersion
     testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: project.powerMockVersion
     testCompile group: 'org.hsqldb', name: 'hsqldb', version: project.hsqlVersion
   }
