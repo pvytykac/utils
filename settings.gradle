@@ -4,9 +4,11 @@ include ':strings'
 include ':trf'
 include ':core'
 include ':ebnf'
+include ':pagination'
 
 project(':jpa').projectDir = "$rootDir/jpa" as File
 project(':strings').projectDir = "$rootDir/strings" as File
 project(':trf').projectDir = "$rootDir/trf" as File
 project(':core').projectDir = "$rootDir/core" as File
 project(':ebnf').projectDir = "$rootDir/ebnf" as File
+project(':pagination').projectDir = "$rootDir/pagination" as File

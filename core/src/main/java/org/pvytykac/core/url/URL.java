@@ -4,7 +4,7 @@ import org.hamcrest.Matcher;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -14,7 +14,7 @@ import java.util.Map;
 public class URL {
 
     private final String base;
-    private final Map<String,Object> parameters = new HashMap<>();
+    private final Map<String,Object> parameters = new LinkedHashMap<>();
     private String anchor;
 
     public URL() {

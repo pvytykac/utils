@@ -1,0 +1,6 @@
+description = 'Pagination by offset ID'
+version = '1.0'
+
+dependencies {
+    compile project(':core')
+}
