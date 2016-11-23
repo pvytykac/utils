@@ -8,6 +8,17 @@ import org.pvytykac.core.url.URL;
  */
 public interface PagingSupport {
 
+    int DEFAULT_PAGE_SIZE = 50;
+    int[] PAGE_SIZES = new int[]{10, 25, 50, 100, 500, 1000};
+
+    // names of http parameters used for paging
+    String PAGE_PARAM = "page";
+    String OFFSET_ID_PARAM = "offsetId";
+    String NEXT_PARAM = "next";
+    String PREV_PARAM = "prev";
+    String OFFSET_PARAM = "offset";
+    String INCLUSIVE_PARAM = "inclusive";
+
     /**
      * @return one-based index of the current page
      */
@@ -22,11 +33,6 @@ public interface PagingSupport {
      * @return max amount of items displayed on a single page
      */
     int getPageSize();
-
-    /**
-     * @return offsetId used to produce the current page (passed from the http request)
-     */
-    String getCurrentOffsetId();
 
     /**
      * @return offsetId used to produce next pages (usually id of the last element on the current page)

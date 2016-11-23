@@ -20,7 +20,6 @@ public class PagingSupportImplTest {
 
     private static final TestCase[] TEST_CASES = new TestCase[]{
         new TestCase("Single page", new Expectations()
-            .setCurrentOffsetId(null)
             .setNextOffsetId("10")
             .setPrevOffsetId("1")
             .setCurrentPage(1)
@@ -37,13 +36,12 @@ public class PagingSupportImplTest {
             .setLastPage(true)
             .setNextPageURL(null)
             .setPreviousPageURL(null)
-            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null))
-            .setLastPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null))
-            .addResizeURL(DEFAULT_PAGE_SIZE, buildURL(1, null, null, null, null))
-            .addResizeURL(1, buildURL(1, null, null, 1, null))
+            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null, null))
+            .setLastPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null, null))
+            .addResizeURL(DEFAULT_PAGE_SIZE, buildURL(1, null, null, null, null, null))
+            .addResizeURL(1, buildURL(1, null, null, 1, null, null))
         ),
         new TestCase("First page", new Expectations()
-            .setCurrentOffsetId(null)
             .setNextOffsetId("100")
             .setPrevOffsetId("1")
             .setCurrentPage(1)
@@ -58,13 +56,12 @@ public class PagingSupportImplTest {
             .setPreviousPage(false)
             .setFirstPage(true)
             .setLastPage(false)
-            .setNextPageURL(buildURL(2, "100", null, NON_DEFAULT_PAGE_SIZE, null))
+            .setNextPageURL(buildURL(2, "100", null, NON_DEFAULT_PAGE_SIZE, null, null))
             .setPreviousPageURL(null)
-            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null))
-            .setLastPageURL(buildURL(10, "100", 800, NON_DEFAULT_PAGE_SIZE, null))
+            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null, null))
+            .setLastPageURL(buildURL(10, "100", 800, NON_DEFAULT_PAGE_SIZE, null, null))
         ),
         new TestCase("Middle page", new Expectations()
-            .setCurrentOffsetId("500")
             .setNextOffsetId("600")
             .setPrevOffsetId("501")
             .setCurrentPage(6)
@@ -79,20 +76,19 @@ public class PagingSupportImplTest {
             .setPreviousPage(true)
             .setFirstPage(false)
             .setLastPage(false)
-            .setNextPageURL(buildURL(7, "600", null, NON_DEFAULT_PAGE_SIZE, null))
-            .setPreviousPageURL(buildURL(5, "501", null, null, NON_DEFAULT_PAGE_SIZE))
-            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null))
-            .setLastPageURL(buildURL(10, "600", 300, NON_DEFAULT_PAGE_SIZE, null))
-            .addPageURL(3, buildURL(3, "501", NON_DEFAULT_PAGE_SIZE * 2, null, NON_DEFAULT_PAGE_SIZE))
-            .addPageURL(4, buildURL(4, "501", NON_DEFAULT_PAGE_SIZE, null, NON_DEFAULT_PAGE_SIZE))
-            .addPageURL(8, buildURL(8, "600", NON_DEFAULT_PAGE_SIZE, NON_DEFAULT_PAGE_SIZE, null))
-            .addPageURL(9, buildURL(9, "600", NON_DEFAULT_PAGE_SIZE * 2, NON_DEFAULT_PAGE_SIZE, null))
-            .addResizeURL(DEFAULT_PAGE_SIZE, buildURL(11, "500", null, null, null))
-            .addResizeURL(150, buildURL(4, "500", null, 100, 50))
-            .addResizeURL(NON_DEFAULT_PAGE_SIZE * 10, buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE * 10, null))
+            .setNextPageURL(buildURL(7, "600", null, NON_DEFAULT_PAGE_SIZE, null, null))
+            .setPreviousPageURL(buildURL(5, "501", null, null, NON_DEFAULT_PAGE_SIZE, null))
+            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null, null))
+            .setLastPageURL(buildURL(10, "600", 300, NON_DEFAULT_PAGE_SIZE, null, null))
+            .addPageURL(3, buildURL(3, "501", NON_DEFAULT_PAGE_SIZE * 2, null, NON_DEFAULT_PAGE_SIZE, null))
+            .addPageURL(4, buildURL(4, "501", NON_DEFAULT_PAGE_SIZE, null, NON_DEFAULT_PAGE_SIZE, null))
+            .addPageURL(8, buildURL(8, "600", NON_DEFAULT_PAGE_SIZE, NON_DEFAULT_PAGE_SIZE, null, null))
+            .addPageURL(9, buildURL(9, "600", NON_DEFAULT_PAGE_SIZE * 2, NON_DEFAULT_PAGE_SIZE, null, null))
+            .addResizeURL(DEFAULT_PAGE_SIZE, buildURL(11, "501", null, null, null, null))
+            .addResizeURL(150, buildURL(4, "501", null, 100, 50, true))
+            .addResizeURL(NON_DEFAULT_PAGE_SIZE * 10, buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE * 10, null, null))
         ),
         new TestCase("Last page", new Expectations()
-            .setCurrentOffsetId("900")
             .setNextOffsetId("100")
             .setPrevOffsetId("901")
             .setCurrentPage(10)
@@ -108,12 +104,11 @@ public class PagingSupportImplTest {
             .setFirstPage(false)
             .setLastPage(true)
             .setNextPageURL(null)
-            .setPreviousPageURL(buildURL(9, "901", null, null, NON_DEFAULT_PAGE_SIZE))
-            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null))
+            .setPreviousPageURL(buildURL(9, "901", null, null, NON_DEFAULT_PAGE_SIZE, null))
+            .setFirstPageURL(buildURL(1, null, null, NON_DEFAULT_PAGE_SIZE, null, null))
             .setLastPageURL(null)
         ),
         new TestCase("Default page size", new Expectations()
-            .setCurrentOffsetId("200")
             .setNextOffsetId("250")
             .setPrevOffsetId("201")
             .setCurrentPage(5)
@@ -128,17 +123,16 @@ public class PagingSupportImplTest {
             .setPreviousPage(true)
             .setFirstPage(false)
             .setLastPage(false)
-            .setNextPageURL(buildURL(6, "250", null, null, null))
-            .setPreviousPageURL(buildURL(4, "201", null, null, DEFAULT_PAGE_SIZE))
-            .setFirstPageURL(buildURL(1, null, null, null, null))
-            .setLastPageURL(buildURL(10, "250", DEFAULT_PAGE_SIZE * 4, null, null))
-            .addPageURL(2, buildURL(2, "201", DEFAULT_PAGE_SIZE * 2, null, DEFAULT_PAGE_SIZE))
-            .addPageURL(3, buildURL(3, "201", DEFAULT_PAGE_SIZE, null, DEFAULT_PAGE_SIZE))
-            .addPageURL(7, buildURL(7, "250", DEFAULT_PAGE_SIZE, null, null))
-            .addPageURL(8, buildURL(8, "250", DEFAULT_PAGE_SIZE * 2, null, null))
+            .setNextPageURL(buildURL(6, "250", null, null, null, null))
+            .setPreviousPageURL(buildURL(4, "201", null, null, DEFAULT_PAGE_SIZE, null))
+            .setFirstPageURL(buildURL(1, null, null, null, null, null))
+            .setLastPageURL(buildURL(10, "250", DEFAULT_PAGE_SIZE * 4, null, null, null))
+            .addPageURL(2, buildURL(2, "201", DEFAULT_PAGE_SIZE * 2, null, DEFAULT_PAGE_SIZE, null))
+            .addPageURL(3, buildURL(3, "201", DEFAULT_PAGE_SIZE, null, DEFAULT_PAGE_SIZE, null))
+            .addPageURL(7, buildURL(7, "250", DEFAULT_PAGE_SIZE, null, null, null))
+            .addPageURL(8, buildURL(8, "250", DEFAULT_PAGE_SIZE * 2, null, null, null))
         ),
         new TestCase("Small last page", new Expectations()
-            .setCurrentOffsetId("1000")
             .setNextOffsetId("1010")
             .setPrevOffsetId("1001")
             .setCurrentPage(2)
@@ -154,12 +148,12 @@ public class PagingSupportImplTest {
             .setFirstPage(false)
             .setLastPage(true)
             .setNextPageURL(null)
-            .setPreviousPageURL(buildURL(1, null, null, 1000, null))
-            .setFirstPageURL(buildURL(1, null, null, 1000, null))
+            .setPreviousPageURL(buildURL(1, null, null, 1000, null, null))
+            .setFirstPageURL(buildURL(1, null, null, 1000, null, null))
             .setLastPageURL(null)
-            .addResizeURL(5, buildURL(201, "1000", null, 5, null))
-            .addResizeURL(10, buildURL(101, "1000", null, 10, null))
-            .addResizeURL(9, buildURL(112, "1000", null, 8, 1))
+            .addResizeURL(5, buildURL(201, "1001", null, 5, null, null))
+            .addResizeURL(10, buildURL(101, "1001", null, 10, null, null))
+            .addResizeURL(9, buildURL(112, "1001", null, 8, 1, true))
         )
     };
 
@@ -169,14 +163,14 @@ public class PagingSupportImplTest {
             tc.test();
     }
 
-    private static String buildURL(int page, String offsetId, Integer offset, Integer next, Integer prev) {
+    private static String buildURL(int page, String offsetId, Integer offset, Integer next, Integer prev, Boolean inclusive) {
         StringBuilder sb = new StringBuilder("?");
 
         if (page > 1)
             sb.append(PagingSupportImpl.PAGE_PARAM)
-              .append("=")
-              .append(page)
-              .append("&");
+                .append("=")
+                .append(page)
+                .append("&");
 
         if (offsetId != null && !offsetId.isEmpty())
             sb.append(PagingSupportImpl.OFFSET_ID_PARAM)
@@ -202,8 +196,18 @@ public class PagingSupportImplTest {
                 .append(offset)
                 .append("&");
 
+        if (inclusive != null)
+            sb.append(PagingSupport.INCLUSIVE_PARAM)
+                .append("=")
+                .append(String.valueOf(inclusive))
+                .append("&");
+
         sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
+        String url = sb.toString();
+
+        return (url.isEmpty())
+            ? "?"
+            : url;
     }
 
     private static class TestCase {
@@ -216,14 +220,13 @@ public class PagingSupportImplTest {
             this.name = name;
             this.expectations = expectations;
             this.ps = new PagingSupportImpl(
-                expectations.getCurrentOffsetId(), expectations.getNextOffsetId(), expectations.getPrevOffsetId(),
+                expectations.getNextOffsetId(), expectations.getPrevOffsetId(),
                 expectations.getCurrentPage(), expectations.getTotalSize(), expectations.getPageSize()
             );
         }
 
         public void test() throws Exception {
             // Static values provided in constructor
-            assertEquals(name, expectations.getCurrentOffsetId(), ps.getCurrentOffsetId());
             assertEquals(name, expectations.getNextOffsetId(), ps.getNextOffsetId());
             assertEquals(name, expectations.getPrevOffsetId(), ps.getPrevOffsetId());
             assertEquals(name, expectations.getCurrentPage(), ps.getCurrentPage());
@@ -311,11 +314,6 @@ public class PagingSupportImplTest {
 
         public String getCurrentOffsetId() {
             return currentOffsetId;
-        }
-
-        public Expectations setCurrentOffsetId(String currentOffsetId) {
-            this.currentOffsetId = currentOffsetId;
-            return this;
         }
 
         public String getNextOffsetId() {

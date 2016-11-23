@@ -4,17 +4,17 @@ package org.pvytykac.core.tags;
  * @author paly
  * @since 16/11/2016 23:52
  */
-class TextTag implements Tag {
+class Text implements HtmlElement {
 
     private final String text;
 
-    public TextTag(String text) {
+    public Text(String text) {
         this.text = text;
     }
 
     @Override
     public String open() {
-        return text;
+        return full();
     }
 
     @Override
@@ -24,6 +24,6 @@ class TextTag implements Tag {
 
     @Override
     public String full() {
-        return open();
+        return text;
     }
 }

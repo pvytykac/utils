@@ -1,11 +1,13 @@
 package org.pvytykac.core.url;
 
-import org.hamcrest.Matcher;
+import org.apache.commons.lang3.StringUtils;
+import org.pvytykac.core.immutable.ImmutableUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.LinkedHashMap;
 import java.util.Map;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 /**
  * @author paly
@@ -14,57 +16,109 @@ import java.util.Map;
 public class URL {
 
     private final String base;
-    private final Map<String,Object> parameters = new LinkedHashMap<>();
-    private String anchor;
+    private final String anchor;
+    private final Map<String, Object> parameters;
 
-    public URL() {
-        this(null);
-    }
-
-    public URL(String base) {
+    private URL(String base, String anchor, Map<String,Object> parameters) {
         this.base = base;
-    }
-
-    public URL anchor(String anchor) {
         this.anchor = anchor;
-        return this;
+        this.parameters = parameters;
     }
 
+    /**
+     * @return relative URL pointing to the current page
+     */
+    public static URL url() {
+        return url(null);
+    }
+
+    /**
+     * @param base path to the base resource
+     * @return URL pointing to the specified resource
+     */
+    public static URL url(String base) {
+        return new URL(base, null, null);
+    }
+
+    /**
+     * Adds a '#' anchor to the url
+     *
+     * @param anchor to be added to the URL
+     * @return URL containing the specified anchor
+     */
+    public URL anchor(String anchor) {
+        return ((isEmpty(this.anchor) ^ isEmpty(anchor))
+            || (isNotEmpty(this.anchor) && isNotEmpty(anchor) && !StringUtils.equals(anchor, this.anchor)))
+            ? new URL(base, anchor, parameters)
+            : this;
+    }
+
+    /**
+     * Adds a path parameter
+     *
+     * @param key name of the parameter
+     * @param value of the parameter, null is converted to empty string by default
+     * @return URL containing the specified parameter
+     */
     public URL parameter(String key, Object value) {
-        return parameter(key, value, null);
+        return parameter(key, value, true);
     }
 
-    public <T> URL parameter(String key, T value, Matcher<T> matcher) {
-        if (value != null && (matcher == null || matcher.matches(value)))
-            parameters.put(key, value);
+    /**
+     * Conditionally adds a path parameter
+     *
+     * @param key name of the parameter, ignored if null
+     * @param value of the parameter, null is converted to empty string by default
+     * @param condition parameter will be added only if this evaluates to <pre>true</pre>
+     * @return URL containing the specified parameter if the condition was met, or original URL otherwise
+     */
+    public URL parameter(String key, Object value, boolean condition) {
+        return (isNotEmpty(key) && value != null && condition)
+            ? new URL(base, anchor, ImmutableUtil.immutableMap(parameters, key, value))
+            : this;
+    }
 
-        return this;
+    public String getBase() {
+        return base;
+    }
+
+    public String getAnchor() {
+        return anchor;
+    }
+
+    public Map<String, Object> getParameters() {
+        return parameters;
     }
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder buff = new StringBuilder();
 
         if (base != null)
-            sb.append(base);
+            buff.append(base);
 
-        if (!parameters.isEmpty())
-            sb.append('?');
+        if (parameters != null && !parameters.isEmpty()) {
+            buff.append('?');
 
-        for (Map.Entry<String,Object> entry: parameters.entrySet())
-            sb.append(encode(entry.getKey()))
+            for (Map.Entry<String, Object> entry : parameters.entrySet())
+                buff.append(encode(entry.getKey()))
                     .append("=")
                     .append(encode(entry.getValue().toString()))
                     .append("&");
 
-        if (!parameters.isEmpty())
-            sb.deleteCharAt(sb.length() - 1);
+            buff.deleteCharAt(buff.length() - 1);
+        }
 
         if (anchor != null && !anchor.isEmpty())
-            sb.append('#')
+            buff.append('#')
                 .append(anchor);
 
-        return sb.toString();
+        // <a href=""> redirects to current page including current path parameters
+        // '?' has to be used to override this to current page + no parameters
+        if (buff.length() < 1)
+            buff.append('?');
+
+        return buff.toString();
     }
 
     private String encode(String source) {

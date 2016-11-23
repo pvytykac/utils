@@ -1,12 +1,7 @@
 package org.pvytykac.paging;
 
-import org.hamcrest.Matcher;
-import org.pvytykac.core.matcher.GreaterThan;
-import org.pvytykac.core.matcher.NotEqual;
+import org.apache.commons.lang3.StringUtils;
 import org.pvytykac.core.url.URL;
-
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.not;
 
 /**
   * @author paly
@@ -15,27 +10,13 @@ import static org.hamcrest.CoreMatchers.not;
 // TODO: last page by ASC sort order + max value of offsetId
 public class PagingSupportImpl implements PagingSupport {
 
-    public static final int DEFAULT_PAGE_SIZE = 50;
-
-    public static final String PAGE_PARAM = "page";
-    public static final String OFFSET_ID_PARAM = "offsetId";
-    public static final String NEXT_PARAM = "next";
-    public static final String PREV_PARAM = "prev";
-    public static final String OFFSET_PARAM = "offset";
-
-    private static final Matcher<Object> NEDPS_MATCHER = new NotEqual(DEFAULT_PAGE_SIZE);
-    private static final Matcher<Integer> GT0_MATCHER = new GreaterThan<>(0);
-    private static final Matcher<Integer> GT1_MATCHER = new GreaterThan<>(1);
-
-    private final String currentOffsetId;
     private final String nextOffsetId;
     private final String prevOffsetId;
     private final int currentPage;
     private final int totalSize;
     private final int pageSize;
 
-    public PagingSupportImpl(String currentOffsetId, String nextOffsetId, String prevOffsetId, int currentPage, int totalSize, int pageSize) {
-        this.currentOffsetId = currentOffsetId;
+    public PagingSupportImpl(String nextOffsetId, String prevOffsetId, int currentPage, int totalSize, int pageSize) {
         this.nextOffsetId = nextOffsetId;
         this.prevOffsetId = prevOffsetId;
         this.currentPage = currentPage;
@@ -56,11 +37,6 @@ public class PagingSupportImpl implements PagingSupport {
     @Override
     public int getPageSize() {
         return pageSize;
-    }
-
-    @Override
-    public String getCurrentOffsetId() {
-        return currentOffsetId;
     }
 
     @Override
@@ -181,7 +157,7 @@ public class PagingSupportImpl implements PagingSupport {
             prev = 0;
             next = newPageSize;
         } else {
-            offsetId = getCurrentOffsetId();
+            offsetId = getPrevOffsetId();
             prev = getItemsOnPreviousPages() % newPageSize;
             next = newPageSize - prev;
         }
@@ -189,12 +165,14 @@ public class PagingSupportImpl implements PagingSupport {
     }
 
     private URL url(int page, String offsetId, int next, int prev, int offset) {
-        return new URL()
-            .parameter(PAGE_PARAM, page, GT1_MATCHER)
-            .parameter(OFFSET_ID_PARAM, offsetId, not(""))
-            .parameter(NEXT_PARAM, next, allOf(GT0_MATCHER, NEDPS_MATCHER))
-            .parameter(PREV_PARAM, prev, GT0_MATCHER)
-            .parameter(OFFSET_PARAM, offset, GT0_MATCHER);
+        boolean inclusive = StringUtils.isNotEmpty(offsetId) && page > 1 && next > 0 && prev > 0;
+        return URL.url()
+            .parameter(PAGE_PARAM, page, page > 1)
+            .parameter(OFFSET_ID_PARAM, offsetId, StringUtils.isNotEmpty(offsetId))
+            .parameter(NEXT_PARAM, next, next > 0 && (next != DEFAULT_PAGE_SIZE || prev > 0))
+            .parameter(PREV_PARAM, prev, prev > 0)
+            .parameter(OFFSET_PARAM, offset, offset > 0)
+            .parameter(INCLUSIVE_PARAM, inclusive, inclusive);
     }
 
 }

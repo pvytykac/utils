@@ -18,7 +18,7 @@ allprojects  {
 
   // jacoco test coverage configuration
   jacoco {
-    toolVersion = "0.7.1.201405082137"
+    toolVersion = "0.7.6.201602180812"
     reportsDir = file("$buildDir/reports/test-coverage")
   }
 }
@@ -29,7 +29,7 @@ subprojects {
   ext {
     junitVersion = '4.12'
     mockitoVersion = '1.9.5'
-    powerMockVersion = '1.6.4'
+    powerMockVersion = '1.6.5'
     hsqlVersion = '2.2.9'
     slf4jVersion = '1.7.18'
     logbackVersion = '1.1.6'
@@ -59,6 +59,7 @@ subprojects {
     // java compiler options
     tasks.withType(JavaCompile) {
       options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+      options.encoding = 'UTF-8'
     }
 
   }
